@@ -4,6 +4,7 @@ import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,10 +14,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.controllers.HeadingController;
+import frc.robot.subsystems.swerve.controllers.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.TeleopController;
 import java.util.Arrays;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -25,7 +28,8 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   public enum DriveModes {
     TELEOP,
-    TRAJECTORY;
+    TRAJECTORY,
+    AUTO_ALIGN;
   }
 
   private DriveModes driveMode = DriveModes.TELEOP;
@@ -40,11 +44,15 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Swerve/YawOffset")
   private Rotation2d gyroYawOffset = new Rotation2d();
 
+  @AutoLogOutput(key = "Swerve/CurrentPosition")
+  private Pose2d currentPosition = new Pose2d();
+
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
 
   private final TeleopController teleopController;
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
   private HeadingController headingController = null;
+  private PIDAutoAlignController pidAutoAlignController = null;
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
@@ -59,6 +67,7 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    currentPosition = RobotState.getInstance().getEstimatedPose();
     // update inputs
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Swerve/Gyro", gyroInputs);
@@ -99,6 +108,12 @@ public class Drive extends SubsystemBase {
         }
         // add heading controll override
       }
+      case AUTO_ALIGN -> {
+        if (pidAutoAlignController != null) {
+          targetSpeeds = pidAutoAlignController.update();
+          targetSpeeds.omegaRadiansPerSecond = headingController.update();
+        }
+      }
     }
     RobotState.getInstance().addRobotSpeeds(getRobotSpeeds());
     // run modules
@@ -128,6 +143,12 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Swerve/HeadingTarget", headingController.getTargetHeading().getRadians());
       Logger.recordOutput("Swerve/HeadingOutput", headingController.update());
+    }
+    Logger.recordOutput("Swerve/EstimatedX", RobotState.getInstance().getEstimatedPose().getX());
+    Logger.recordOutput("Swerve/EstimatedY", RobotState.getInstance().getEstimatedPose().getY());
+    if (pidAutoAlignController != null) {
+      Logger.recordOutput("Swerve/PID/VelocityX", pidAutoAlignController.getXVel());
+      Logger.recordOutput("Swerve/PID/VelocityY", pidAutoAlignController.getYVel());
     }
   }
 
@@ -192,6 +213,45 @@ public class Drive extends SubsystemBase {
 
   public void clearHeadingControl() {
     headingController = null;
+  }
+
+  public Pose2d setTargetPosition(Pose2d targetPosition) {
+    driveMode = DriveModes.AUTO_ALIGN;
+    if (pidAutoAlignController == null) {
+      pidAutoAlignController =
+          new PIDAutoAlignController(
+              () -> RobotState.getInstance().getEstimatedPose(),
+              () -> gyroInputs.yawPosition,
+              targetPosition);
+    } else {
+      pidAutoAlignController.setTargetPosition(targetPosition);
+    }
+
+    setTargetHeading(targetPosition.getRotation());
+
+    return targetPosition;
+  }
+
+  public void clearTargetPositionController() {
+    pidAutoAlignController = null;
+  }
+
+  public Command setTargetPositionCommand(Pose2d targetPosition) {
+    return new FunctionalCommand(
+        () -> setTargetPosition(targetPosition),
+        () -> {},
+        (t) -> clearTargetPositionController(),
+        () -> false,
+        this);
+  }
+
+  public Command setTargetApproachReef(double offset, boolean bside) {
+    return new FunctionalCommand(
+        () -> setTargetPosition(RobotState.getInstance().getApproachPose(offset, bside)),
+        () -> {},
+        (t) -> clearTargetPositionController(),
+        () -> false,
+        this);
   }
 
   public boolean isTeleop() {

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-
 import frc.robot.subsystems.swerve.DriveConstants.ModuleConfig;
 import frc.robot.utility.PhoenixUtil;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
