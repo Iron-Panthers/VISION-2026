@@ -71,12 +71,12 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(11, "FL Drive"),
-              CAN.at(10, "FL Steer"),
-              12,
-              new Rotation2d(2.15377),
+              CAN.at(5, "FL Drive"),
+              CAN.at(4, "FL Steer"),
+              6,
+              new Rotation2d(-1.877592 - Math.PI),
               false,
-              true),
+              false),
           new ModuleConfig(
               CAN.at(2, "FR Drive"),
               CAN.at(1, "FR Steer"),
@@ -85,14 +85,14 @@ public class DriveConstants {
               false,
               false),
           new ModuleConfig(
-              CAN.at(8, "BL Drive"), CAN.at(7, "BLSteer"), 9, new Rotation2d(-2.212), false, true),
+              CAN.at(8, "BL Drive"), CAN.at(7, "BL Steer"), 9, new Rotation2d(-2.212), false, true),
           new ModuleConfig(
-              CAN.at(5, "BR Drive"),
-              CAN.at(4, "BRSteer"),
-              6,
-              new Rotation2d(-1.877592),
+              CAN.at(11, "BR Drive"),
+              CAN.at(10, "BR Steer"),
+              12,
+              new Rotation2d(2.15377 - Math.PI),
               false,
-              false)
+              true)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -111,13 +111,18 @@ public class DriveConstants {
               true),
           new ModuleConfig(
               CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
+              CAN.at(20, "BL Steer"),
               3,
               new Rotation2d(1.0139),
               true,
               false),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"), CAN.at(22, "BRSteer"), 4, new Rotation2d(-2.8148), true, true)
+              CAN.at(23, "BR Drive"),
+              CAN.at(22, "BR Steer"),
+              4,
+              new Rotation2d(-2.8148),
+              true,
+              true)
         };
       };
 
