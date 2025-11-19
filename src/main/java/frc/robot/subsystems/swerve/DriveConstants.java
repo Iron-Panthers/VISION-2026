@@ -76,7 +76,7 @@ public class DriveConstants {
               6,
               new Rotation2d(-1.877592 - Math.PI),
               false,
-              false),
+              true),
           new ModuleConfig(
               CAN.at(2, "FR Drive"),
               CAN.at(1, "FR Steer"),
@@ -92,7 +92,7 @@ public class DriveConstants {
               12,
               new Rotation2d(2.15377 - Math.PI),
               false,
-              true)
+              false)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
