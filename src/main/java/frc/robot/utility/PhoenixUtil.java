@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -106,7 +107,7 @@ public final class PhoenixUtil {
         moduleConfig.steerID(),
         moduleConfig.encoderID(),
         new Rotation2d(0),
-        false,
-        false);
+        InvertedValue.CounterClockwise_Positive,
+        InvertedValue.CounterClockwise_Positive);
   }
 }
