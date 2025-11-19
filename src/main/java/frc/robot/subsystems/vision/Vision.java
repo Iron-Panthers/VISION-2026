@@ -121,4 +121,20 @@ public class Vision extends SubsystemBase {
         "Vision/Summary/RejectedPoses",
         allRejectedPoses.toArray(new Pose3d[allRejectedPoses.size()]));
   }
+
+  public int getCameraCount() {
+    return io.length;
+  }
+
+  public Pose3d[] getRobotTransforms() {
+    Pose3d[] results = new Pose3d[io.length];
+    for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
+      if (inputs[cameraIndex].observations.length > 0) {
+        results[cameraIndex] = inputs[cameraIndex].observations[0].estimatedPose();
+      } else {
+        results[cameraIndex] = null;
+      }
+    }
+    return results;
+  }
 }

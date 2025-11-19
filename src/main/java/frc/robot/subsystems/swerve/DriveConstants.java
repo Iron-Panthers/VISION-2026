@@ -72,31 +72,26 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(19, "FL Drive"),
-              CAN.at(18, "FL Steer"),
-              2,
-              new Rotation2d(-1.148),
+              CAN.at(5, "FL Drive"),
+              CAN.at(4, "FL Steer"),
+              6,
+              new Rotation2d(-1.877592 - Math.PI),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(17, "FR Drive"),
-              CAN.at(16, "FR Steer"),
-              1,
-              new Rotation2d(-0.405),
+              CAN.at(2, "FR Drive"),
+              CAN.at(1, "FR Steer"),
+              3,
+              new Rotation2d(-2.32498),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
-              3,
-              new Rotation2d(1.0139),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
+              CAN.at(8, "BL Drive"), CAN.at(7, "BL Steer"), 9, new Rotation2d(-2.212), InvertedValue.Clockwise_Positive, InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"),
-              CAN.at(22, "BRSteer"),
-              4,
-              new Rotation2d(-2.8148),
+              CAN.at(11, "BR Drive"),
+              CAN.at(10, "BR Steer"),
+              12,
+              new Rotation2d(2.15377 - Math.PI),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive)
         };
@@ -117,7 +112,7 @@ public class DriveConstants {
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
+              CAN.at(20, "BL Steer"),
               3,
               new Rotation2d(1.0139),
               InvertedValue.Clockwise_Positive,
@@ -135,18 +130,18 @@ public class DriveConstants {
   public static final ModuleConstants MODULE_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new ModuleConstants(
-            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new Gains(0.24, 2.4, 0.08, 70, 0, 0),
             new MotionProfileGains(4, 64, 640),
             new Gains(0.16, 0.67, 0, 1.5, 0, 0),
-            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
-            150.0 / 7,
+            (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // Mk5n L2.5 16 tooth
+            287.0 / 11,
             3.125);
         case SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 70, 0, 0),
             new MotionProfileGains(4, 64, 640),
-            new Gains(0.16, 0.67, 0, 1.5, 0, 0),
-            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
-            150.0 / 7,
+            new Gains(0.13, 0.878, 0.07, 1.5, 0, 0),
+            (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // MK5n R2 ratio
+            287.0 / 11,
             3.125);
       };
   public static final DriveTrainSimulationConfig mapleSimConfig =
@@ -176,9 +171,17 @@ public class DriveConstants {
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case COMP -> new HeadingControllerConstants(4, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
+      };
+
+  public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
+      switch (getRobotType()) {
+        case COMP -> new PIDAutoAlignControllerConstants(
+            0, 0, 0, 0, 0); /*FIXME: tune these constants*/
+        case SIM -> new PIDAutoAlignControllerConstants(3.2, 0, 0, 4, 1);
+        default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
@@ -260,6 +263,9 @@ public class DriveConstants {
   public record HeadingControllerConstants(
       double kP, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
 
+  public record PIDAutoAlignControllerConstants(
+      double kP, double kI, double kD, double maxVelocity, double maxAcceleration) {}
+
   public record ApproachPose(Pose2d pose) {
     public static ApproachPose[] fromPose2ds(Pose2d... poses) {
       List<ApproachPose> approachPoses = new ArrayList<ApproachPose>();
@@ -270,8 +276,10 @@ public class DriveConstants {
     }
 
     public Pose2d getAlliancePose() {
-      return DriverStation.getAlliance().get() == Alliance.Red
-          ? FlippingUtil.flipFieldPose(pose)
+      return DriverStation.getAlliance().isPresent()
+          ? (DriverStation.getAlliance().get() == Alliance.Red
+              ? FlippingUtil.flipFieldPose(pose)
+              : pose)
           : pose;
     }
 

@@ -22,33 +22,23 @@ public class VisionConstants {
       switch (getRobotType()) {
         case COMP -> new Transform3d[] {
           // arducam-1 (front left)
-          new Transform3d(
-              0.299, 0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), Math.toRadians(55))),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-2 (front center)
-          new Transform3d(0.3017, 0, 0.3373, new Rotation3d(0, -Math.toRadians(35), 0)),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-3 (front right)
-          new Transform3d(
-              0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-4 (back right)
-          new Transform3d(
-              -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
-          // arducam-5 (back left)
-          new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
         };
         case SIM -> new Transform3d[] {
           // arducam-1 (front left)
-          new Transform3d(
-              0.299, 0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), Math.toRadians(55))),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-2 (front center)
-          new Transform3d(0.3017, 0, 0.3373, new Rotation3d(0, -Math.toRadians(35), 0)),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-3 (front right)
-          new Transform3d(
-              0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-4 (back right)
-          new Transform3d(
-              -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
-          // arducam-5 (back left)
-          new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
+          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
         };
         default -> new Transform3d[0];
       };
