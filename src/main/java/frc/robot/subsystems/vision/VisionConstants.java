@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -58,11 +59,31 @@ public class VisionConstants {
                 new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
       };
 
-  // public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
-  public static final int[] IGNORE_TAGS = {}; // removed
+  public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
+  // public static final int[] IGNORE_TAGS = {}; // removed
 
-  public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT =
-      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+  // Fixed AprilTag field layout initialization
+  public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT;
+
+  static {
+    // logic for dynamically setting the april tag field layout
+    AprilTagFieldLayout defaultFieldLayout =
+        AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    List<AprilTag> aprilTags = defaultFieldLayout.getTags();
+    // remove ignored tags
+    aprilTags.removeIf(
+        tag -> {
+          for (int ignoreTag : IGNORE_TAGS) {
+            if (tag.ID == ignoreTag) {
+              return true;
+            }
+          }
+          return false;
+        });
+    APRIL_TAG_FIELD_LAYOUT =
+        new AprilTagFieldLayout(
+            aprilTags, defaultFieldLayout.getFieldWidth(), defaultFieldLayout.getFieldWidth());
+  }
 
   public static record TagCountDeviation(
       UnitDeviationParams xParams, UnitDeviationParams yParams, UnitDeviationParams thetaParams) {

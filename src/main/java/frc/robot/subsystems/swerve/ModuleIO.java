@@ -39,9 +39,9 @@ public interface ModuleIO {
 
   default void runSteerPositionSetpoint(double angleRads) {}
 
-  default void setDriveGains(Gains gains) {}
+  default void setDriveSlot0(Gains gains) {}
 
-  default void setSteerGains(Gains gains, MotionProfileGains motionProfileGains) {}
+  default void setSteerSlot0(Gains gains, MotionProfileGains motionProfileGains) {}
 
   default void stop() {}
 }

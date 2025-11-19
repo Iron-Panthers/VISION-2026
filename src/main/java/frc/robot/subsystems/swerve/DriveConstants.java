@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
@@ -75,24 +76,24 @@ public class DriveConstants {
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.877592 - Math.PI),
-              false,
-              true),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(2, "FR Drive"),
               CAN.at(1, "FR Steer"),
               3,
               new Rotation2d(-2.32498),
-              false,
-              false),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BL Drive"), CAN.at(7, "BL Steer"), 9, new Rotation2d(-2.212), false, true),
+              CAN.at(8, "BL Drive"), CAN.at(7, "BL Steer"), 9, new Rotation2d(-2.212), InvertedValue.Clockwise_Positive, InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "BR Drive"),
               CAN.at(10, "BR Steer"),
               12,
               new Rotation2d(2.15377 - Math.PI),
-              false,
-              false)
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -100,29 +101,29 @@ public class DriveConstants {
               CAN.at(18, "FL Steer"),
               2,
               new Rotation2d(-1.148),
-              true,
-              false),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(17, "FR Drive"),
               CAN.at(16, "FR Steer"),
               1,
               new Rotation2d(-0.405),
-              true,
-              true),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(21, "BL Drive"),
               CAN.at(20, "BL Steer"),
               3,
               new Rotation2d(1.0139),
-              true,
-              false),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(23, "BR Drive"),
-              CAN.at(22, "BR Steer"),
+              CAN.at(22, "BRSteer"),
               4,
               new Rotation2d(-2.8148),
-              true,
-              true)
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive)
         };
       };
 
@@ -241,8 +242,8 @@ public class DriveConstants {
       int steerID,
       int encoderID,
       Rotation2d absoluteEncoderOffset,
-      boolean steerInverted,
-      boolean driveInverted) {}
+      InvertedValue steerInverted,
+      InvertedValue driveInverted) {}
 
   public record ModuleConstants(
       Gains steerGains,
