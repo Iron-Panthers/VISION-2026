@@ -16,7 +16,7 @@ public class VisionIOPhotonvision implements VisionIO {
   private final PhotonPoseEstimator estimator;
 
   public VisionIOPhotonvision(int index) {
-    camera = new PhotonCamera("arducam-" + index);
+    camera = new PhotonCamera("arducam-" + (index + 5));
     estimator =
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,

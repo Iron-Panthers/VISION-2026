@@ -22,23 +22,28 @@ public class VisionConstants {
       switch (getRobotType()) {
         case COMP -> new Transform3d[] {
           // arducam-1 (front left)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-2 (front center)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-3 (front right)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-4 (back right)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
+          // new Transform3d(
+          //     new Translation3d(0.21937890846531594, -0.13666084654638164, 0.20626467241554544),
+          //     new Rotation3d(-0.029006616232349892, -0.22108366571088722, 0.1861031568043142)),
+          // // arducam-2 (front center)
+          // new Transform3d(
+          //     new Translation3d(0.24846608031487283, 0.12357484567302171, 0.2381084900885237),
+          //     new Rotation3d(-0.019572294401325952, -0.18863434097038298, -0.12674693833966524)),
+          new Transform3d(), new Transform3d()
+          // // arducam-3 (front right)
+          // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
+          // // arducam-4 (back right)
+          // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
         };
         case SIM -> new Transform3d[] {
           // arducam-1 (front left)
           new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // arducam-2 (front center)
           new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-3 (front right)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-4 (back right)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
+          // // arducam-3 (front right)
+          // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
+          // // arducam-4 (back right)
+          // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0))
         };
         default -> new Transform3d[0];
       };
@@ -59,7 +64,7 @@ public class VisionConstants {
                 new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
       };
 
-  public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
+  public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 12, 13, 14, 15, 16};
   // public static final int[] IGNORE_TAGS = {}; // removed
 
   // Fixed AprilTag field layout initialization

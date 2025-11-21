@@ -32,7 +32,7 @@ public class Vision extends SubsystemBase {
   public void periodic() {
     for (int i = 0; i < io.length; ++i) {
       io[i].updateInputs(inputs[i]);
-      Logger.processInputs("Vision/Camera " + i, inputs[i]);
+      Logger.processInputs("Vision/Camera " + (i + 5), inputs[i]);
     }
 
     // values for logging

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.VibrateHIDCommand;
+import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
@@ -22,13 +23,12 @@ import frc.robot.subsystems.rgb.RGBIOCANdle;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
-import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
-import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -65,14 +65,14 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          swerve =
-              new Drive(
-                  new GyroIOPigeon2(),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          // swerve =
+          //     new Drive(
+          //         new GyroIOPigeon2(),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision(new VisionIOPhotonvision(1), new VisionIOPhotonvision(2));
           rgb = new RGB(new RGBIOCANdle());
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
         }
@@ -126,6 +126,7 @@ public class RobotContainer {
     nameCommands();
     configureAutos();
     configureBindings();
+    VisionTuningCommands.addTuningCommandsToAutoChooser(vision, autoChooser);
   }
 
   public void containerMatchStarting() {
@@ -200,8 +201,7 @@ public class RobotContainer {
   }
 
   public Command getAutoCommand() {
-    return AutoBuilder.buildAuto(
-        "R L4 (3) (EDC)"); // HACK: Replace once we get auto logging TODO: Fix hack
+    return VisionTuningCommands.measureCameraPositions(vision);
   }
 
   // runs when auto starts

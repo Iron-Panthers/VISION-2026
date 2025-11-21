@@ -55,13 +55,13 @@ public class VisionTuningCommands {
   public static Transform3d heldTagTransform =
       new Transform3d(
           new Translation3d( //
-              Units.inchesToMeters(16. + 11.), // Distance forward
-              Units.inchesToMeters(0.), // Distance left
+              Units.inchesToMeters(106.75), // Distance forward
+              Units.inchesToMeters(8.75), // Distance left
               Units.inchesToMeters(8.875 + 6.5 / 2.) // Distance up
               ),
-          new Rotation3d(0., 0., Units.degreesToRadians(180)));
+          new Rotation3d(0., 0., Units.degreesToRadians(0)));
 
-  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(10).get();
+  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(5).get();
 
   // 481.387in
 
