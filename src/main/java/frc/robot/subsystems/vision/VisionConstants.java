@@ -9,6 +9,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import java.util.List;
@@ -22,14 +23,14 @@ public class VisionConstants {
       switch (getRobotType()) {
         case COMP -> new Transform3d[] {
           // arducam-1 (front left)
-          // new Transform3d(
-          //     new Translation3d(0.21937890846531594, -0.13666084654638164, 0.20626467241554544),
-          //     new Rotation3d(-0.029006616232349892, -0.22108366571088722, 0.1861031568043142)),
+          new Transform3d(
+              new Translation3d(-0.2628327298377271, 0.1838727418375329, 0.2612087616993975),
+              new Rotation3d(0.0013437830141532724, -0.18652974839545497, -2.967261311784782)),
           // // arducam-2 (front center)
-          // new Transform3d(
-          //     new Translation3d(0.24846608031487283, 0.12357484567302171, 0.2381084900885237),
-          //     new Rotation3d(-0.019572294401325952, -0.18863434097038298, -0.12674693833966524)),
-          new Transform3d(), new Transform3d()
+          new Transform3d(
+              new Translation3d(-0.2910820214728092, -0.1838727418375329, 0.2591884269566544),
+              new Rotation3d(0.004400589512719636, -0.17817453409346934, 2.9694158567617692))
+          // new Transform3d(), new Transform3d()
           // // arducam-3 (front right)
           // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // // arducam-4 (back right)

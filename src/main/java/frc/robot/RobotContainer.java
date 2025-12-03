@@ -4,6 +4,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,8 +25,10 @@ import frc.robot.subsystems.rgb.RGBIOCANdle;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
+import frc.robot.subsystems.swerve.GyroIOPigeon2;
 import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
+import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -65,13 +69,13 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          // swerve =
-          //     new Drive(
-          //         new GyroIOPigeon2(),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           vision = new Vision(new VisionIOPhotonvision(1), new VisionIOPhotonvision(2));
           rgb = new RGB(new RGBIOCANdle());
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -94,8 +98,8 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
           vision =
               new Vision(
-                  new VisionIOPhotonvisionSim(4, driveSimulation::getSimulatedDriveTrainPose),
-                  new VisionIOPhotonvisionSim(5, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim(1, driveSimulation::getSimulatedDriveTrainPose),
+                  new VisionIOPhotonvisionSim(2, driveSimulation::getSimulatedDriveTrainPose));
 
           SimulatedArena.getInstance().resetFieldForAuto();
         }
@@ -150,12 +154,19 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
+                  if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                      || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                    swerve.clearHeadingControl();
+                  }
                 })
             .withName("Drive Teleop"));
 
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+
+    // auto align
+    driverA.b().whileTrue(swerve.setTargetPositionCommand(new Pose2d(12.3, 5.4, new Rotation2d())));
   }
 
   private void configureAutos() {
@@ -224,6 +235,7 @@ public class RobotContainer {
     // TODO: Define all of the dashboard outputs here
     SmartDashboard.putString("Current Auto", autoChooser.get().getName());
   }
+
   /** Ran every 20 milliseconds */
   public void updateSimulation() {
     if (Constants.getRobotMode() != Constants.Mode.SIM) return;
