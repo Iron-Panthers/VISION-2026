@@ -76,28 +76,28 @@ public class DriveConstants {
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.877592 - Math.PI),
-              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(2, "FR Drive"),
               CAN.at(1, "FR Steer"),
               3,
               new Rotation2d(-2.32498),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.Clockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(8, "BL Drive"),
               CAN.at(7, "BL Steer"),
               9,
               new Rotation2d(-2.212),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "BR Drive"),
               CAN.at(10, "BR Steer"),
               12,
               new Rotation2d(2.15377 - Math.PI),
-              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
@@ -106,29 +106,29 @@ public class DriveConstants {
               CAN.at(18, "FL Steer"),
               2,
               new Rotation2d(-1.148),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(17, "FR Drive"),
               CAN.at(16, "FR Steer"),
               1,
               new Rotation2d(-0.405),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.Clockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(21, "BL Drive"),
               CAN.at(20, "BL Steer"),
               3,
               new Rotation2d(1.0139),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(23, "BR Drive"),
               CAN.at(22, "BRSteer"),
               4,
               new Rotation2d(-2.8148),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.Clockwise_Positive)
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive)
         };
       };
 
@@ -176,7 +176,7 @@ public class DriveConstants {
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(4, 0, 5, 200, 0.002);
+        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -184,7 +184,7 @@ public class DriveConstants {
   public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
-            0, 0, 0, 0, 0); /*FIXME: tune these constants*/
+            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case SIM -> new PIDAutoAlignControllerConstants(3.2, 0, 0, 4, 1);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
