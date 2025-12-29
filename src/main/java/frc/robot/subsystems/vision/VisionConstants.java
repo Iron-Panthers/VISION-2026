@@ -38,9 +38,13 @@ public class VisionConstants {
         };
         case SIM -> new Transform3d[] {
           // arducam-1 (front left)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
-          // arducam-2 (front center)
-          new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
+          new Transform3d(
+              new Translation3d(-0.2628327298377271, 0.1838727418375329, 0.2612087616993975),
+              new Rotation3d(0.0013437830141532724, -0.18652974839545497, -2.967261311784782)),
+          // // arducam-2 (front center)
+          new Transform3d(
+              new Translation3d(-0.2910820214728092, -0.1838727418375329, 0.2591884269566544),
+              new Rotation3d(0.004400589512719636, -0.17817453409346934, 2.9694158567617692))
           // // arducam-3 (front right)
           // new Transform3d(0., 0, 0, new Rotation3d(0, 0, 0)),
           // // arducam-4 (back right)

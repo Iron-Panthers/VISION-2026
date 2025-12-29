@@ -102,33 +102,33 @@ public class DriveConstants {
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(19, "FL Drive"),
-              CAN.at(18, "FL Steer"),
-              2,
-              new Rotation2d(-1.148),
-              InvertedValue.CounterClockwise_Positive,
-              InvertedValue.Clockwise_Positive),
-          new ModuleConfig(
-              CAN.at(17, "FR Drive"),
-              CAN.at(16, "FR Steer"),
-              1,
-              new Rotation2d(-0.405),
+              CAN.at(5, "FL Drive"),
+              CAN.at(4, "FL Steer"),
+              6,
+              new Rotation2d(-1.877592 - Math.PI),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(21, "BL Drive"),
-              CAN.at(20, "BL Steer"),
+              CAN.at(2, "FR Drive"),
+              CAN.at(1, "FR Steer"),
               3,
-              new Rotation2d(1.0139),
+              new Rotation2d(-2.32498),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(8, "BL Drive"),
+              CAN.at(7, "BL Steer"),
+              9,
+              new Rotation2d(-2.212),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"),
-              CAN.at(22, "BRSteer"),
-              4,
-              new Rotation2d(-2.8148),
+              CAN.at(11, "BR Drive"),
+              CAN.at(10, "BR Steer"),
+              12,
+              new Rotation2d(2.15377 - Math.PI),
               InvertedValue.CounterClockwise_Positive,
-              InvertedValue.CounterClockwise_Positive)
+              InvertedValue.Clockwise_Positive)
         };
       };
 
