@@ -153,7 +153,7 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
                 steerSupplyCurrent,
                 steerStatorCurrent)
             .isOK();
-    inputs.steerAbsolutePostion = steerAbsolutePosition.get();
+    inputs.steerAbsolutePosition = steerAbsolutePosition.get();
     inputs.steerPosition = Rotation2d.fromRotations(steerPosition.getValueAsDouble());
     inputs.steerVelocityRadsPerSec = Units.rotationsToRadians(steerVelocity.getValueAsDouble());
     inputs.steerAppliedVolts = steerAppliedVolts.getValueAsDouble();

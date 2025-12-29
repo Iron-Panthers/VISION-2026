@@ -34,19 +34,19 @@ public class Module {
     Logger.recordOutput("Swerve/Module" + index + "/SteerSetpoint", targetState.angle.getRadians());
     Logger.recordOutput(
         "Swerve/Module" + index + "/SteerError",
-        targetState.angle.getRadians() - inputs.steerAbsolutePostion.getRadians());
+        targetState.angle.getRadians() - inputs.steerAbsolutePosition.getRadians());
     Logger.recordOutput("Swerve/Module" + index + "/DriveVelRadsScalar", driveVelocityRads);
   }
 
   public Rotation2d getSteerHeading() {
-    return inputs.steerAbsolutePostion;
+    return inputs.steerAbsolutePosition;
   }
 
   public SwerveModulePosition getModulePosition() {
-    return new SwerveModulePosition(inputs.drivePositionMeters, inputs.steerAbsolutePostion);
+    return new SwerveModulePosition(inputs.drivePositionMeters, inputs.steerAbsolutePosition);
   }
 
   public SwerveModuleState getModuleState() {
-    return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.steerAbsolutePostion);
+    return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.steerAbsolutePosition);
   }
 }

@@ -171,22 +171,22 @@ public class DriveConstants {
 
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(4, 0, 5, 200, 0.002);
-        case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case SIM -> new HeadingControllerConstants(8, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
 
   public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
-            0, 0, 0, 0, 0); /*FIXME: tune these constants*/
-        case SIM -> new PIDAutoAlignControllerConstants(3.2, 0, 0, 4, 1);
+            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+        case SIM -> new PIDAutoAlignControllerConstants(6, 0, 0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
-  public static final Pose2d INITAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
+  public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 
   public static final PPHolonomicDriveController HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(

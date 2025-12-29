@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
+import frc.robot.subsystems.swerve.controllers.AutoAlignHeadingController;
 import frc.robot.subsystems.swerve.controllers.HeadingController;
 import frc.robot.subsystems.swerve.controllers.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.TeleopController;
@@ -52,6 +53,7 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
   private HeadingController headingController = null;
   private PIDAutoAlignController pidAutoAlignController = null;
+  private AutoAlignHeadingController autoAlignHeadingController = null;
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
@@ -112,7 +114,7 @@ public class Drive extends SubsystemBase {
       case AUTO_ALIGN -> {
         if (pidAutoAlignController != null) {
           targetSpeeds = pidAutoAlignController.update();
-          targetSpeeds.omegaRadiansPerSecond = headingController.update();
+          targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
         }
       }
     }
@@ -204,7 +206,7 @@ public class Drive extends SubsystemBase {
     if (headingController == null) {
       headingController = new HeadingController(() -> fieldRelativeYaw, targetHeading);
     } else {
-      headingController.setTargeHeading(targetHeading);
+      headingController.setTargetHeading(targetHeading);
     }
   }
 
@@ -213,6 +215,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d setTargetPosition(Pose2d targetPosition) {
+    clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {
       pidAutoAlignController =
@@ -224,13 +227,23 @@ public class Drive extends SubsystemBase {
       pidAutoAlignController.setTargetPosition(targetPosition);
     }
 
-    setTargetHeading(targetPosition.getRotation());
+    if (autoAlignHeadingController == null) {
+      autoAlignHeadingController =
+          new AutoAlignHeadingController(
+              () -> fieldRelativeYaw,
+              targetPosition.getRotation(),
+              pidAutoAlignController.calculateTimeLeft());
+    } else {
+      autoAlignHeadingController.setTargetHeading(
+          targetPosition.getRotation(), pidAutoAlignController.calculateTimeLeft());
+    }
 
     return targetPosition;
   }
 
   public void clearTargetPositionController() {
     pidAutoAlignController = null;
+    autoAlignHeadingController = null;
   }
 
   public Command setTargetPositionCommand(Pose2d targetPosition) {

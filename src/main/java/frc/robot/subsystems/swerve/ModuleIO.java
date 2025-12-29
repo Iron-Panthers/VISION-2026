@@ -21,7 +21,7 @@ public interface ModuleIO {
     public double driveSupplyCurrent = 0;
     public double driveStatorCurrent = 0;
 
-    public Rotation2d steerAbsolutePostion = new Rotation2d();
+    public Rotation2d steerAbsolutePosition = new Rotation2d();
     public Rotation2d steerPosition = new Rotation2d();
     public double steerVelocityRadsPerSec = 0;
     public double steerAppliedVolts = 0;

@@ -57,7 +57,15 @@ public class HeadingController {
     return targetHeading;
   }
 
-  public void setTargeHeading(Rotation2d targetHeading) {
+  public void setTargetHeading(Rotation2d targetHeading) {
     this.targetHeading = targetHeading;
+  }
+
+  protected ProfiledPIDController getController() {
+    return controller;
+  }
+
+  protected Supplier<Rotation2d> getHeadingSupplier() {
+    return headingSupplier;
   }
 }

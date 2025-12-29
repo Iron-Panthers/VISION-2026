@@ -152,9 +152,17 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
-    driverA.start().onTrue(swerve.zeroGyroCommand());
+    driverA.x().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    // driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+
+    // auto align
+    driverA
+        .b()
+        .whileTrue(
+            swerve.setTargetPositionCommand(
+                new Pose2d(5.3, 5.45, new Rotation2d(Math.toRadians(56)))));
   }
 
   private void configureAutos() {

@@ -43,8 +43,8 @@ public class RobotState {
   private static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Pose2d initialPose =
       DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
-          ? FlippingUtil.flipFieldPose(DriveConstants.INITAL_POSE)
-          : DriveConstants.INITAL_POSE;
+          ? FlippingUtil.flipFieldPose(DriveConstants.INITIAL_POSE)
+          : DriveConstants.INITIAL_POSE;
 
   private final Matrix<N3, N1> matrixQ = new Matrix<>(Nat.N3(), Nat.N1());
   private final Matrix<N3, N3> kalmanGain = new Matrix<>(Nat.N3(), Nat.N3());

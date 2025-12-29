@@ -61,6 +61,25 @@ public class PIDAutoAlignController {
     xVel = Math.abs(magVel * Math.cos(angle)) * (dx < 0 ? -1 : 1);
     Logger.recordOutput("Swerve/PIDAutoalign/Angle", angle);
     Logger.recordOutput("Swerve/PIDAutoalign/magVel", magVel);
+    Logger.recordOutput("Swerve/PIDAutoalign/Target", targetPosition);
+  }
+
+  public double calculateTimeLeft() {
+    double totalTime;
+    double d = startPosition.getTranslation().getDistance(targetPosition.getTranslation());
+    double a = PID_AUTOALIGN_CONSTANTS.maxAcceleration();
+    double v = PID_AUTOALIGN_CONSTANTS.maxVelocity();
+    if (d - a * (Math.pow((v / a), 2)) > 0) {
+      totalTime = (d - (a * (v / a) * (v / a))) / v + 2 * (v / a);
+    } else {
+      totalTime = 2 * Math.sqrt(d / a);
+    }
+    double timeLeft =
+        totalTime
+            * (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
+                / d);
+    Logger.recordOutput("Swerve/PIDAutoalign/TimeLeft", totalTime);
+    return timeLeft;
   }
 
   // update the values
