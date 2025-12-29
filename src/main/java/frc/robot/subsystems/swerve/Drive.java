@@ -232,10 +232,11 @@ public class Drive extends SubsystemBase {
           new AutoAlignHeadingController(
               () -> fieldRelativeYaw,
               targetPosition.getRotation(),
-              pidAutoAlignController.calculateTimeLeft());
+              pidAutoAlignController.calculateTimeLeft(),
+              DriveConstants.ROTATION_FINISH_PERCENT);
     } else {
       autoAlignHeadingController.setTargetHeading(
-          targetPosition.getRotation(), pidAutoAlignController.calculateTimeLeft());
+          targetPosition.getRotation(), pidAutoAlignController.calculateTimeLeft(), DriveConstants.ROTATION_FINISH_PERCENT);
     }
 
     return targetPosition;

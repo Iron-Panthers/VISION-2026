@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.controllers;
 
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
+import frc.robot.subsystems.swerve.DriveConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -9,20 +10,21 @@ import java.util.function.Supplier;
 public class AutoAlignHeadingController extends HeadingController {
 
   public AutoAlignHeadingController(
-      Supplier<Rotation2d> headingSupplier, Rotation2d targetHeading, double timeLeft) {
+      Supplier<Rotation2d> headingSupplier, Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
     super(headingSupplier, targetHeading);
-    setTargetHeading(targetHeading, timeLeft);
+    setTargetHeading(targetHeading, timeLeft, rotationFinishPercent);
   }
 
   @Override
   public void setTargetHeading(Rotation2d targetHeading) {
-    setTargetHeading(targetHeading, 0);
+    setTargetHeading(targetHeading, 0, DriveConstants.ROTATION_FINISH_PERCENT);
   }
 
-  public void setTargetHeading(Rotation2d targetHeading, double timeLeft) {
+  public void setTargetHeading(Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
     super.setTargetHeading(targetHeading);
     double a = HEADING_CONTROLLER_CONSTANTS.maxAcceleration();
     double v = HEADING_CONTROLLER_CONSTANTS.maxVelocity();
+    timeLeft = rotationFinishPercent * timeLeft;
     if (a != 0 && v != 0) {
       double adjustedTimeLeft = timeLeft - a * (Math.pow((v / a), 2)) / v;
       Rotation2d adjustedAngleDifference =

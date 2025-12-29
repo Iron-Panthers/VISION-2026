@@ -86,7 +86,12 @@ public class DriveConstants {
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BL Drive"), CAN.at(7, "BL Steer"), 9, new Rotation2d(-2.212), InvertedValue.Clockwise_Positive, InvertedValue.CounterClockwise_Positive),
+              CAN.at(8, "BL Drive"),
+              CAN.at(7, "BL Steer"),
+              9,
+              new Rotation2d(-2.212),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "BR Drive"),
               CAN.at(10, "BR Steer"),
@@ -183,7 +188,7 @@ public class DriveConstants {
         case SIM -> new PIDAutoAlignControllerConstants(6, 0, 0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
-
+    public static final double ROTATION_FINISH_PERCENT = 0.9;
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
