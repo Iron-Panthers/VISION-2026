@@ -74,17 +74,17 @@ public class PIDAutoAlignController {
     // the naming is very important
     double magTranslCurrPos =
         Math.hypot(
-                positionSupplier.get().getX() - startPosition.getX(),
-                positionSupplier.get().getY() - startPosition.getY())
+                startToCurrDx,
+                startToCurrDy)
             * (Math.abs(startToTargAngle.minus(startToCurrAngle).getRadians()) > Math.PI / 2
                 ? -1
                 : 1);
-    double magTanslTargPos =
+    double magTranslTargPos =
         Math.hypot(
-            targetPosition.getX() - startPosition.getX(),
-            targetPosition.getY() - startPosition.getY());
-
-    double pidOutput = magController.calculate(magTranslCurrPos, magTanslTargPos);
+            startToTargDx,
+            startToTargDx);
+//can change to simpler varaibles above, and the problem being we use magnitude, so we combine x and y, but we have to pslit them at a larger level
+    double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
     double magVel = pidOutput + magController.getSetpoint().velocity;
     magVel = (Math.abs(magVel) < 0.02 ? 0 : magVel);
     yVel =
@@ -108,7 +108,7 @@ public class PIDAutoAlignController {
     Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
     Logger.recordOutput("Swerve/PIDAutoalign/CurrPos", magTranslCurrPos);
-    Logger.recordOutput("Swerve/PIDAutoalign/TargPos", magTanslTargPos);
+    Logger.recordOutput("Swerve/PIDAutoalign/TargPos", magTranslTargPos);
     Logger.recordOutput("Swerve/PIDAutoalign/magVel", magVel);
     Logger.recordOutput("Swerve/PIDAutoalign/Target", targetPosition);
     Logger.recordOutput("Swerve/PIDAutoalign/TrapVel", magController.getSetpoint().velocity);
@@ -117,7 +117,7 @@ public class PIDAutoAlignController {
 
   public void calculateLinearMovementTest() {
     double magTranslCurrPos = positionSupplier.get().getX() - startPosition.getX();
-    double magTanslTargPos = targetPosition.getX() - startPosition.getX();
+    double magTranslTargPos = targetPosition.getX() - startPosition.getX();
     double magVel = magController.calculate(magTranslCurrPos);
     xVel = magVel + magController.getSetpoint().velocity;
     // xVel = magVel - startVel;
