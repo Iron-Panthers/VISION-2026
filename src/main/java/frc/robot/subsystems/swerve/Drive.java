@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
 import com.pathplanner.lib.util.FlippingUtil;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -96,7 +95,7 @@ public class Drive extends SubsystemBase {
       case TELEOP -> {
         targetSpeeds = teleopController.update();
         if (headingController != null) {
-          // 0.0001 to make the wheels stop in a diamond shape instead of straight so they do not
+          // 0.d0001 to make the wheels stop in a diamond shape instead of straight so they do not
           // vibrate
           double rotationVelocity = headingController.update();
           targetSpeeds.omegaRadiansPerSecond =
@@ -135,8 +134,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Swerve/DriveMode", driveMode);
     Logger.recordOutput(
         "Swerve/Magnitude",
-        MathUtil.clamp(
-            Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond), 0, 3));
+        Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond));
     Logger.recordOutput("Swerve/FieldRelativeYaw", fieldRelativeYaw);
     Logger.recordOutput("Swerve/TrajectorySpeeds", trajectorySpeeds);
     if (headingController != null) {
@@ -236,7 +234,9 @@ public class Drive extends SubsystemBase {
               DriveConstants.ROTATION_FINISH_PERCENT);
     } else {
       autoAlignHeadingController.setTargetHeading(
-          targetPosition.getRotation(), pidAutoAlignController.calculateTimeLeft(), DriveConstants.ROTATION_FINISH_PERCENT);
+          targetPosition.getRotation(),
+          pidAutoAlignController.calculateTimeLeft(),
+          DriveConstants.ROTATION_FINISH_PERCENT);
     }
 
     return targetPosition;

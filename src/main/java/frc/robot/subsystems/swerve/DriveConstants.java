@@ -41,7 +41,7 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            4.5,
+            3.75,
             10,
             6);
         case SIM -> new DrivebaseConfig(
@@ -49,9 +49,10 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            4.5,
+            3.3, // 3.75,
             10,
-            6);
+            // TODO: make it actually max acceleration in m/s^2
+            1.63); // (multiply by max velocity to get m/s^2)
       };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -144,7 +145,7 @@ public class DriveConstants {
         case SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 70, 0, 0),
             new MotionProfileGains(4, 64, 640),
-            new Gains(0.13, 0.878, 0.07, 1.5, 0, 0),
+            new Gains(0.13, 0.79, 0.387, 2, 0, 0),
             (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // MK5n R2 ratio
             287.0 / 11,
             3.125);
@@ -160,11 +161,11 @@ public class DriveConstants {
                   DCMotor.getKrakenX60(1),
                   MODULE_CONSTANTS.driveReduction,
                   MODULE_CONSTANTS.steerReduction,
-                  Volts.of(0.2),
-                  Volts.of(0.2),
+                  Volts.of(0.13),
+                  Volts.of(0.25),
                   Meters.of(DRIVE_CONFIG.wheelRadius()),
                   KilogramSquareMeters.of(0.04),
-                  1.2));
+                  1.4));
 
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
@@ -185,10 +186,10 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
-        case SIM -> new PIDAutoAlignControllerConstants(6, 0, 0, 2, 2);
+        case SIM -> new PIDAutoAlignControllerConstants(10, 0.0, 0.0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
-    public static final double ROTATION_FINISH_PERCENT = 0.9;
+  public static final double ROTATION_FINISH_PERCENT = 0.9;
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));

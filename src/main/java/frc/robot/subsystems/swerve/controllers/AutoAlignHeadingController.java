@@ -1,16 +1,19 @@
 package frc.robot.subsystems.swerve.controllers;
 
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
-import frc.robot.subsystems.swerve.DriveConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.subsystems.swerve.DriveConstants;
 import java.util.function.Supplier;
 
 public class AutoAlignHeadingController extends HeadingController {
 
   public AutoAlignHeadingController(
-      Supplier<Rotation2d> headingSupplier, Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
+      Supplier<Rotation2d> headingSupplier,
+      Rotation2d targetHeading,
+      double timeLeft,
+      double rotationFinishPercent) {
     super(headingSupplier, targetHeading);
     setTargetHeading(targetHeading, timeLeft, rotationFinishPercent);
   }
@@ -20,7 +23,8 @@ public class AutoAlignHeadingController extends HeadingController {
     setTargetHeading(targetHeading, 0, DriveConstants.ROTATION_FINISH_PERCENT);
   }
 
-  public void setTargetHeading(Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
+  public void setTargetHeading(
+      Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
     super.setTargetHeading(targetHeading);
     double a = HEADING_CONTROLLER_CONSTANTS.maxAcceleration();
     double v = HEADING_CONTROLLER_CONSTANTS.maxVelocity();

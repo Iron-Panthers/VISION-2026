@@ -46,10 +46,9 @@ public class TeleopController {
   /* update controller with current desired state */
   public ChassisSpeeds update() {
     Translation2d linearVelocity = calculateLinearVelocity(controllerX, controllerY);
-
     double omega = MathUtil.applyDeadband(controllerOmega, 0.001);
     omega = Math.copySign(Math.pow(Math.abs(omega), 1.5), omega);
-
+    // Translation2d newVelocity = linearVelocity;
     // acceleration limiting
     Translation2d linearVelocityDiff = linearVelocity.minus(pastLinearVelocity);
     clampedVelocityDiff =
@@ -91,7 +90,7 @@ public class TeleopController {
   }
 
   @AutoLogOutput(key = "Swerve/Acceleration")
-  private double getAccerlation() {
+  private double getAcceleration() {
     return clampedVelocityDiff;
   }
 

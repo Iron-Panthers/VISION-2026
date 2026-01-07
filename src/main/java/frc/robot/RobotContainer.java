@@ -160,10 +160,11 @@ public class RobotContainer {
 
     // auto align (DON'T RUN ON ACTUAL ROBOT PROBABLY, make other location)
     driverA
-        .b()
+        .y()
         .whileTrue(
             swerve.setTargetPositionCommand(
-                new Pose2d(5.3, 5.45, new Rotation2d(Math.toRadians(56)))));
+                new Pose2d(5.3, 6.54, new Rotation2d(Math.toRadians(0)))));
+    driverA.b().onTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d())));
   }
 
   private void configureAutos() {
