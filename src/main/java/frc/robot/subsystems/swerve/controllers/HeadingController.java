@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class HeadingController {
   private ProfiledPIDController controller;
@@ -35,13 +36,21 @@ public class HeadingController {
   }
 
   public double update() {
-    double output =
-        controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
 
+    double output =
+        controller.calculate(headingSupplier.get().getRadians() - targetHeading.getRadians(), 0)
+            + controller.getSetpoint().velocity;
+    Logger.recordOutput(
+        "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/HeadingController/Output", output);
+    Logger.recordOutput(
+        "Swerve/HeadingController/SetpointPosition", controller.getSetpoint().position);
+    Logger.recordOutput(
+        "Swerve/HeadingController/CurrentPosition", headingSupplier.get().getRadians());
     return Math.abs(output) > 0.02 ? output : 0; // To prevent jittering
   }
 
-  @AutoLogOutput(key = "Swerve/AtTarget")
+  @AutoLogOutput(key = "Swerve/HeadingController/AtTarget")
   public boolean atTarget() {
     return epsilonEquals(
         controller.getSetpoint().position,
