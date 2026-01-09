@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.controllers;
+package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
 
@@ -15,7 +15,7 @@ import frc.robot.RobotState;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-public class PIDAutoAlignController {
+public class PIDAutoAlignController extends BaseTranslationController {
 
   // supplies the position values
   private ProfiledPIDController magController;
@@ -26,14 +26,12 @@ public class PIDAutoAlignController {
   private Pose2d startPosition;
   private double xVel;
   private double yVel;
-  private final Supplier<Rotation2d> yawSupplier;
   private final Supplier<Translation2d> velocity;
 
   public PIDAutoAlignController(
       Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, Pose2d targetPosition) {
-
+    super(yawSupplier);
     this.positionSupplier = positionSupplier;
-    this.yawSupplier = yawSupplier;
     this.targetPosition = targetPosition;
     this.velocity = () -> RobotState.getInstance().getVelocity();
 
@@ -112,8 +110,7 @@ public class PIDAutoAlignController {
             new Constraints(
                 magController.getConstraints().maxVelocity,
                 magController.getConstraints().maxAcceleration));
-    trapezoidProfile.calculate(
-        0, new State(d, -calculateForwardVelocity()), new State(0,0));
+    trapezoidProfile.calculate(0, new State(d, -calculateForwardVelocity()), new State(0, 0));
     double totalTime = trapezoidProfile.totalTime();
     double timeLeft =
         totalTime
@@ -162,7 +159,7 @@ public class PIDAutoAlignController {
     Translation2d vel = velocity.get();
     double x = vel.getX();
     double y = vel.getY();
-    Pose2d relativeTargetPosition = 
+    Pose2d relativeTargetPosition =
         new Pose2d(
             positionSupplier.get().getX() - targetPosition.getX(),
             positionSupplier.get().getY() - targetPosition.getY(),

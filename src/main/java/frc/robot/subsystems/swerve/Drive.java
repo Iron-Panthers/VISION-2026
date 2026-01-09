@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
 import com.pathplanner.lib.util.FlippingUtil;
@@ -17,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
-import frc.robot.subsystems.swerve.controllers.AutoAlignHeadingController;
-import frc.robot.subsystems.swerve.controllers.HeadingController;
-import frc.robot.subsystems.swerve.controllers.PIDAutoAlignController;
-import frc.robot.subsystems.swerve.controllers.TeleopController;
+import frc.robot.subsystems.swerve.controllers.heading.AutoAlignHeadingController;
+import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
+import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
+import frc.robot.subsystems.swerve.controllers.translation.TeleopTranslationController;
 import java.util.Arrays;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -47,10 +48,11 @@ public class Drive extends SubsystemBase {
   private Pose2d currentPosition = new Pose2d();
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
-
-  private final TeleopController teleopController;
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
-  private HeadingController headingController = null;
+
+  // controllers
+  private final TeleopTranslationController teleopController;
+  private TeleopHeadingController headingController = null;
   private PIDAutoAlignController pidAutoAlignController = null;
   private AutoAlignHeadingController autoAlignHeadingController = null;
 
@@ -62,7 +64,7 @@ public class Drive extends SubsystemBase {
     modules[2] = new Module(bl, 2);
     modules[3] = new Module(br, 3);
 
-    teleopController = new TeleopController(() -> fieldRelativeYaw);
+    teleopController = new TeleopTranslationController(() -> fieldRelativeYaw);
   }
 
   @Override
@@ -202,7 +204,9 @@ public class Drive extends SubsystemBase {
 
   public void setTargetHeading(Rotation2d targetHeading) {
     if (headingController == null) {
-      headingController = new HeadingController(() -> fieldRelativeYaw, targetHeading);
+      headingController =
+          new TeleopHeadingController(
+              () -> fieldRelativeYaw, targetHeading, HEADING_CONTROLLER_CONSTANTS);
     } else {
       headingController.setTargetHeading(targetHeading);
     }

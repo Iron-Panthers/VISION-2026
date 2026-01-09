@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.controllers;
+package frc.robot.subsystems.swerve.controllers.heading;
 
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 
@@ -7,14 +7,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.DriveConstants;
 import java.util.function.Supplier;
 
-public class AutoAlignHeadingController extends HeadingController {
+public class AutoAlignHeadingController extends BaseHeadingController {
 
   public AutoAlignHeadingController(
       Supplier<Rotation2d> headingSupplier,
       Rotation2d targetHeading,
       double timeLeft,
       double rotationFinishPercent) {
-    super(headingSupplier, targetHeading);
+    super(headingSupplier, targetHeading, HEADING_CONTROLLER_CONSTANTS);
     setTargetHeading(targetHeading, timeLeft, rotationFinishPercent);
   }
 

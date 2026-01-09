@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.controllers;
+package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
 
@@ -12,8 +12,7 @@ import frc.robot.Constants;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
-public class TeleopController {
-  private final Supplier<Rotation2d> yawSupplier;
+public class TeleopTranslationController extends BaseTranslationController {
   private double controllerX = 0;
   private double controllerY = 0;
   private double controllerOmega = 0;
@@ -22,8 +21,8 @@ public class TeleopController {
   private double acceleration;
 
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
-  public TeleopController(Supplier<Rotation2d> yawSupplier) {
-    this.yawSupplier = yawSupplier;
+  public TeleopTranslationController(Supplier<Rotation2d> yawSupplier) {
+    super(yawSupplier);
   }
 
   /* accept driver input from joysticks */
