@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import java.util.function.Supplier;
@@ -27,11 +28,6 @@ public class PIDAutoAlignController {
   private double yVel;
   private final Supplier<Rotation2d> yawSupplier;
   private final Supplier<Translation2d> velocity;
-  private double time;
-
-  // private double startVel;
-
-  private TrapezoidProfile testTrapezoidProfile;
 
   public PIDAutoAlignController(
       Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, Pose2d targetPosition) {
@@ -53,8 +49,6 @@ public class PIDAutoAlignController {
     setTargetPosition(targetPosition);
     magController.disableContinuousInput();
     magController.setTolerance(0, 0);
-
-    testTrapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10));
   }
   // calculate how to get to the desired position
   public void calculateLinearMovement() {
@@ -73,17 +67,13 @@ public class PIDAutoAlignController {
 
     // the naming is very important
     double magTranslCurrPos =
-        Math.hypot(
-                startToCurrDx,
-                startToCurrDy)
+        Math.hypot(startToCurrDx, startToCurrDy)
             * (Math.abs(startToTargAngle.minus(startToCurrAngle).getRadians()) > Math.PI / 2
                 ? -1
                 : 1);
-    double magTranslTargPos =
-        Math.hypot(
-            startToTargDx,
-            startToTargDx);
-//can change to simpler varaibles above, and the problem being we use magnitude, so we combine x and y, but we have to pslit them at a larger level
+    double magTranslTargPos = Math.hypot(startToTargDx, startToTargDy);
+    // can change to simpler varaibles above, and the problem being we use magnitude, so we combine
+    // x and y, but we have to pslit them at a larger level
     double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
     double magVel = pidOutput + magController.getSetpoint().velocity;
     magVel = (Math.abs(magVel) < 0.02 ? 0 : magVel);
@@ -115,34 +105,16 @@ public class PIDAutoAlignController {
     Logger.recordOutput("Swerve/PIDAutoalign/PIDVel", pidOutput);
   }
 
-  public void calculateLinearMovementTest() {
-    double magTranslCurrPos = positionSupplier.get().getX() - startPosition.getX();
-    double magTranslTargPos = targetPosition.getX() - startPosition.getX();
-    double magVel = magController.calculate(magTranslCurrPos);
-    xVel = magVel + magController.getSetpoint().velocity;
-    // xVel = magVel - startVel;
-    yVel = 0;
-    // Logger.recordOutput("Swerve/PIDAutoalign/TestMagVel", -magVel);
-    // Logger.recordOutput("Swerve/PIDAutoalign/TestTrapVel",
-    // -magController.getSetpoint().velocity);
-    // Logger.recordOutput("Swerve/PIDAutoalign/TestTarget", targetPosition);
-    // Logger.recordOutput("Swerve/PIDAutoalign/TestTargPos", magTanslTargPos);
-    // Logger.recordOutput(
-    //     "Swerve/PIDAutoalign/TestSetpointPos", magController.getSetpoint().position);
-    // Logger.recordOutput("Swerve/PIDAutoalign/TestCurrPos", magTranslCurrPos);
-    time += Constants.PERIODIC_LOOP_SEC;
-  }
-
   public double calculateTimeLeft() {
-    double totalTime;
     double d = startPosition.getTranslation().getDistance(targetPosition.getTranslation());
-    double a = PID_AUTOALIGN_CONSTANTS.maxAcceleration();
-    double v = PID_AUTOALIGN_CONSTANTS.maxVelocity();
-    if (d - a * (Math.pow((v / a), 2)) > 0) {
-      totalTime = (d - (a * (v / a) * (v / a))) / v + 2 * (v / a);
-    } else {
-      totalTime = 2 * Math.sqrt(d / a);
-    }
+    TrapezoidProfile trapezoidProfile =
+        new TrapezoidProfile(
+            new Constraints(
+                magController.getConstraints().maxVelocity,
+                magController.getConstraints().maxAcceleration));
+    trapezoidProfile.calculate(
+        0, new State(d, -calculateForwardVelocity()), new State(0,0));
+    double totalTime = trapezoidProfile.totalTime();
     double timeLeft =
         totalTime
             * (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
@@ -184,15 +156,17 @@ public class PIDAutoAlignController {
             targetPosition.getY() - startPosition.getY());
     magController.setGoal(magTanslTargPos);
     magController.reset(magTranslCurrPos, calculateForwardVelocity());
-    time = 0;
-    // startVel = calculateForwardVelocity();
   }
 
   public double calculateForwardVelocity() {
     Translation2d vel = velocity.get();
     double x = vel.getX();
     double y = vel.getY();
-    Pose2d relativeTargetPosition = targetPosition.relativeTo(positionSupplier.get());
+    Pose2d relativeTargetPosition = 
+        new Pose2d(
+            positionSupplier.get().getX() - targetPosition.getX(),
+            positionSupplier.get().getY() - targetPosition.getY(),
+            new Rotation2d());
     Rotation2d targetAngle =
         new Rotation2d(Math.atan2(relativeTargetPosition.getY(), relativeTargetPosition.getX()));
     Rotation2d currentVelAngle = new Rotation2d(Math.atan2(y, x));

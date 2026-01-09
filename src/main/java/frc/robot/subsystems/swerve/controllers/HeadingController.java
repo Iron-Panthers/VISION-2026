@@ -38,8 +38,8 @@ public class HeadingController {
   public double update() {
 
     double output =
-        controller.calculate(headingSupplier.get().getRadians() - targetHeading.getRadians(), 0)
-            + controller.getSetpoint().velocity;
+        controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
+            // + controller.getSetpoint().velocity;
     Logger.recordOutput(
         "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
     Logger.recordOutput("Swerve/HeadingController/Output", output);
