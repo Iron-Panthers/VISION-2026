@@ -142,7 +142,6 @@ public class Drive extends SubsystemBase {
     if (headingController != null) {
       Logger.recordOutput(
           "Swerve/HeadingTarget", headingController.getTargetHeading().getRadians());
-      Logger.recordOutput("Swerve/HeadingOutput", headingController.update());
     }
     Logger.recordOutput("Swerve/EstimatedX", RobotState.getInstance().getEstimatedPose().getX());
     Logger.recordOutput("Swerve/EstimatedY", RobotState.getInstance().getEstimatedPose().getY());

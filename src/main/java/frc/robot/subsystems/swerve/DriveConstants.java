@@ -50,7 +50,7 @@ public class DriveConstants {
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.3, // 3.75,
-            10,
+            9,
             // TODO: make it actually max acceleration in m/s^2
             1.63); // (multiply by max velocity to get m/s^2)
       };
@@ -175,10 +175,11 @@ public class DriveConstants {
         default -> new TrajectoryFollowerConstants(new PIDConstants(0, 0), new PIDConstants(0, 0));
       };
 
+  // Tolerance in Radians
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
-        case SIM -> new HeadingControllerConstants(5, 0, 5, 50, 0.002);
+        case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
 
@@ -186,7 +187,7 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
-        case SIM -> new PIDAutoAlignControllerConstants(10, 0.0, 0.0, 2, 2);
+        case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;

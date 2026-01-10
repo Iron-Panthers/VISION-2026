@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.DriveConstants.HeadingControllerConstants;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class BaseHeadingController {
   // the PID controller
@@ -46,19 +46,29 @@ public abstract class BaseHeadingController {
    * @return omega radians per second of the heading controller
    */
   public double update() {
-    double output =
-        controller.calculate(headingSupplier.get().getRadians() - targetHeading.getRadians(), 0)
-            + controller.getSetpoint().velocity;
-    return Math.abs(output) > 0.02 ? output : 0; // To prevent jittering
+    double pidOutput =
+        controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
+    double output = pidOutput + controller.getSetpoint().velocity;
+    Logger.recordOutput("Swerve/HeadingController/PIDOutput", pidOutput);
+    Logger.recordOutput(
+        "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/HeadingController/Output", output);
+    Logger.recordOutput(
+        "Swerve/HeadingController/SetpointPosition", controller.getSetpoint().position);
+    Logger.recordOutput(
+        "Swerve/HeadingController/CurrentPosition", headingSupplier.get().getRadians());
+    Logger.recordOutput("Swerve/HeadingController/AtTarget", atTarget());
+    if (atTarget()) {
+      return 0;
+    }
+    return output; // To prevent jittering
   }
 
-  /** Weather or not the controller is close enough to its target */
-  @AutoLogOutput(key = "Swerve/HeadingController/AtTarget")
   public boolean atTarget() {
     return epsilonEquals(
-        controller.getSetpoint().position,
+        headingSupplier.get().getRadians(),
         controller.getGoal().position,
-        Units.degreesToRadians(HEADING_CONTROLLER_CONSTANTS.tolerance()));
+        HEADING_CONTROLLER_CONSTANTS.tolerance());
   }
 
   protected boolean epsilonEquals(double a, double b, double epsilon) {
